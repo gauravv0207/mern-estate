@@ -20,7 +20,9 @@ import {
           signOutUserSuccess,
           signOutUserFailure
         } from "../redux/user/userSlice";
-import { set } from "mongoose";
+// import { set } from "mongoose";
+import { Link } from 'react-router-dom';
+// import link from 'react-router-dom';
 
 export default function Profile() {
   const fileRef=useRef(null)
@@ -32,6 +34,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess]=useState(false);
   // console.log(formData);
   const dispatch=useDispatch()
+
   useEffect(()=>{
     if(file){
       handleFileUpload(file);
@@ -68,32 +71,6 @@ export default function Profile() {
     setformData({...formData,[e.target.id]:e.target.value})
   }
 
-  // const handleSubmit= async (e)=>{
-  //   e.preventDefault();
-  //   try {
-  //     dispatch(updateUserStart())
-  //     const res= await fetch(`/api/user/update/${currentUser._id}`,{
-  //       method:'POST',
-  //       headers:{
-  //         'Content-Type':'application/json'
-  //       },
-  //       body:JSON.stringify(formData)
-  //     })
-  //     console.log(res);
-  //     const data=await res.json();
-  //     console.log(data);
-  //     // if (data.status===false) {
-  //     //   dispatch(updateUserFailure(data.message));
-  //     //   return;
-  //     // }
-  //     console.log("dispatched succesfullly");
-  //     dispatch(updateUserSuccess(data));
-  //   } catch (error) {
-  //     console.log("there was a error",error.message);
-  //     dispatch(updateUserFailure(error.message))
-  //   }
-  // }
-
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -122,39 +99,40 @@ export default function Profile() {
     console.log("there was an error", error.message);
     dispatch(updateUserFailure(error.message));
   }
-};
+  };
 
-const handleDeleteUser = async ()=>{
-  try {
-    dispatch(deleteUserStart())
-    const res = await fetch(`api/user/delete/${currentUser._id}`,{
-      method: 'DELETE'
-  });
-  const data = await res.json();
-  if(data.success===false){
-    dispatch(deleteUserFailure(data.message))
-    return;
-  }
-  dispatch(deleteUserSuccess(data))
-  } catch (error) {
-    dispatch(deleteUserFailure(error.message))
-  }
-}
-
-const handleSignOut = async ()=>{
-  try {
-    dispatch(signOutUserStart())
-    const res = await fetch('api/auth/signout')
+  const handleDeleteUser = async ()=>{
+    try {
+      dispatch(deleteUserStart())
+      const res = await fetch(`api/user/delete/${currentUser._id}`,{
+        method: 'DELETE'
+    });
     const data = await res.json();
     if(data.success===false){
-      dispatch(signOutUserFailure())
+      dispatch(deleteUserFailure(data.message))
       return;
     }
-    dispatch(signOutUserSuccess())
-  } catch (error) {
-      dispatch(signOutUserFailure())
+    dispatch(deleteUserSuccess(data))
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message))
+    }
   }
-}
+
+  const handleSignOut = async ()=>{
+    try {
+      dispatch(signOutUserStart())
+      const res = await fetch('api/auth/signout')
+      const data = await res.json();
+      if(data.success===false){
+        dispatch(signOutUserFailure())
+        return;
+      }
+      dispatch(signOutUserSuccess())
+    } catch (error) {
+        dispatch(signOutUserFailure())
+    }
+  }
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -226,7 +204,13 @@ const handleSignOut = async ()=>{
         <button 
         disabled={loading}
         className="bg-slate-700 text-white rounded-lg p-3 
-        uppercase hover:opacity-95 disabled:opacity-80">{loading ? 'Updating...':'Update'}</button>
+        uppercase hover:opacity-95 disabled:opacity-80">{loading ? 'Updating...':'Update'}
+        </button>
+        <Link className="bg-green-700 text-white p-3 rounded-lg uppercase 
+          text-center hover:opacity-95" 
+          to={"/create-listing"}>
+          Create Listing
+        </Link>
       </form>
 
       <div className="flex justify-between mt-5">
