@@ -42,9 +42,9 @@ export default function UpdateListing() {
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.listingId;
-      const res = await fetch(`/api/listing/get/${listingId}`)
-      const data=await res.json();
-      if(data.success===false){
+      const res = await fetch(`/api/listing/get/${listingId}`);
+      const data = await res.json();
+      if (data.success === false) {
         console.log(data.message);
       }
       setFormData(data);
@@ -131,7 +131,7 @@ export default function UpdateListing() {
           userRef: currentUser._id,
         }),
       });
-      const data = await res.json(); 
+      const data = await res.json();
       setLoading(false);
       if (data.success === false) {
         setError(data.message);
